@@ -1,11 +1,15 @@
 import mongoose from "mongoose";
-import { imageSchema } from "./imageModel.js";
-
 
 const foderSchema = new mongoose.Schema(
   {
-    images: [imageSchema],
-    subfolder: [{ type: mongoose.Schema.Types.ObjectId, ref: "Folder" }],
+    images: [{ type: mongoose.Schema.Types.ObjectId, ref: "Image" }],
+    type: {
+      type: String,
+      enum: ["root", "content"],
+      default: "content",
+    },
+    parent_folder: { type: mongoose.Schema.Types.ObjectId, ref: "Folder" },
+    sub_folder: [{ type: mongoose.Schema.Types.ObjectId, ref: "Folder" }],
     name: { type: String, unique: true, required: true },
   },
   { timestamps: true }

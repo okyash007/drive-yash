@@ -2,6 +2,10 @@ import express from "express";
 import dotenv from "dotenv";
 import connectDb from "./db/connectDb.js";
 import cors from "cors";
+import { userRouter } from "./router/userRouter.js";
+import { errorMiddleWare } from "./middlewares/errorMiddleWare.js";
+import { folderRouter } from "./router/folderRouter.js";
+import { imageRouter } from "./router/imageRouter.js";
 
 dotenv.config({
   path: "./.env",
@@ -28,3 +32,8 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.get("/", (req, res) => {
   res.json({ status: "server running" });
 });
+
+app.use("/user", userRouter)
+app.use("/folder", folderRouter)
+app.use("/image", imageRouter)
+app.use(errorMiddleWare);
