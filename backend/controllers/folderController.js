@@ -19,3 +19,9 @@ export const getFolder = asyncHandler(async (req, res) => {
     .populate("sub_folder");
   return res.json(new apiResponse(200, folder));
 });
+
+export const deleteFolder = asyncHandler(async (req, res, next) => {
+  const folder = await Folder.findById(req.body.parent_folder);
+  
+  await Folder.findByIdAndDelete(req.params.id);
+});
