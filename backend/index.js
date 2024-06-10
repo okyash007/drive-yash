@@ -56,10 +56,6 @@ if (!fs.existsSync("uploads")) {
   fs.mkdirSync("uploads");
 }
 
-app.get("/", (req, res) => {
-  res.json({ status: "server running" });
-});
-
 app.post("/upload", upload.single("file"), (req, res) => {
   const filePath = path.join(__dirname, "uploads", req.file.filename);
 
@@ -80,6 +76,10 @@ app.post("/upload", upload.single("file"), (req, res) => {
         error: error.message,
       });
     });
+});
+
+app.get("/", (req, res) => {
+  res.json({ status: "server running" });
 });
 
 app.use("/user", userRouter);
