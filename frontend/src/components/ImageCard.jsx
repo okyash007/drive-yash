@@ -1,7 +1,18 @@
 import React from "react";
 import { MdDelete } from "react-icons/md";
+import { makePostRequest } from "../apis/makePostRequest";
+import { backendUrl } from "../utils/constants";
 
 const ImageCard = ({ data }) => {
+  async function deleteImage() {
+    const deleteStatus = await makePostRequest(
+      `${backendUrl}/image/delete/${data._id}`,
+      { folder: data.parent_folder }
+    );
+
+    console.log(deleteStatus);
+  }
+
   return (
     <div className="px-4 pb-2 hover:ring-2 relative">
       <img
@@ -15,7 +26,7 @@ const ImageCard = ({ data }) => {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("hii");
+            deleteImage();
           }}
         />
       </div>
