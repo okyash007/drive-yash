@@ -36,17 +36,17 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 const __dirname = path.resolve();
 
 cloudinary.config({
-  cloud_name: "dspp405ug",
-  api_key: "925428478762846",
-  api_secret: "oMhtpK9G_nmIi9z430buSFLfU0U", // Click 'View Credentials' below to copy your API secret
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Ensure this folder exists
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname); // Unique file name
+    cb(null, Date.now() + "-" + file.originalname);
   },
 });
 
@@ -66,7 +66,6 @@ app.post("/upload", upload.single("file"), (req, res) => {
   cloudinary.uploader
     .upload(filePath, { folder: "uploads" })
     .then((result) => {
-      // Delete the file from the local filesystem after uploading to Cloudinary
       fs.unlinkSync(filePath);
 
       res.status(201).json({
