@@ -11,6 +11,7 @@ const AddImage = ({ folderId }) => {
   const [image, setImage] = useState(null);
   const [data, setData] = useState({ name: "", path: "" });
   const [uploadLoading, setUploadLoading] = useState(false);
+  const [addLoading, setAddLoading] = useState(false);
 
   async function createImage(id, name, path) {
     const newImage = await makePostRequest(`${backendUrl}/image/add`, {
@@ -19,6 +20,7 @@ const AddImage = ({ folderId }) => {
       path,
     });
     console.log(newImage);
+    setAddLoading(false);
     if (newImage.success === true) {
       dispatch(addImage(newImage.data));
     }
@@ -111,24 +113,37 @@ const AddImage = ({ folderId }) => {
           </button>
         )}
       </form>
-      <button
-        className="bg-[#0000003a] px-4 py-2 rounded-md hover:bg-[#0000005a]"
-        onClick={() => {
-          if (data.name && data.path) {
-            createImage(folderId, data.name, data.path);
-          } else {
-            toast.error("fill data correctly", {
-              duration: 4000,
-              position: "bottom-right",
-              // Customizing the toast with Tailwind CSS classes
-              className: "toast-error",
-              // Or you can use a custom icon
-            });
-          }
-        }}
-      >
-        Add
-      </button>
+      {addLoading ? (
+        <div className="flex justify-center items-center bg-[#0000003a] px-4 py-2 rounded-md">
+          <l-ring
+            size="20"
+            stroke="3"
+            bg-opacity="0"
+            speed="2"
+            color="white"
+          ></l-ring>
+        </div>
+      ) : (
+        <button
+          className="bg-[#0000003a] px-4 py-2 rounded-md hover:bg-[#0000005a]"
+          onClick={() => {
+            if (data.name && data.path) {
+              setAddLoading(true);
+              createImage(folderId, data.name, data.path);
+            } else {
+              toast.error("fill data correctly", {
+                duration: 4000,
+                position: "bottom-right",
+                // Customizing the toast with Tailwind CSS classes
+                className: "toast-error",
+                // Or you can use a custom icon
+              });
+            }
+          }}
+        >
+          Add
+        </button>
+      )}
     </div>
   );
 };
