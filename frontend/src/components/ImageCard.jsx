@@ -2,15 +2,22 @@ import React from "react";
 import { MdDelete } from "react-icons/md";
 import { makePostRequest } from "../apis/makePostRequest";
 import { backendUrl } from "../utils/constants";
+import { deleteImage } from "../store/folderSlice";
+import { useDispatch } from "react-redux";
 
 const ImageCard = ({ data }) => {
-  async function deleteImage() {
+  const dispatch = useDispatch();
+
+  async function deleteImageFn() {
     const deleteStatus = await makePostRequest(
       `${backendUrl}/image/delete/${data._id}`,
       { folder: data.parent_folder }
     );
 
     console.log(deleteStatus);
+    if (deleteStatus.success === true) {
+      dispatch(deleteImage({ id: data._id }));
+    }
   }
 
   return (
@@ -26,7 +33,7 @@ const ImageCard = ({ data }) => {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            deleteImage();
+            deleteImageFn();
           }}
         />
       </div>

@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { makePostRequest } from "../../../apis/makePostRequest";
 import { backendUrl } from "../../../utils/constants";
+import { useDispatch } from "react-redux";
+import { addFolder } from "../../../store/folderSlice";
 
-const AddFolder = ({ folderId, setContent }) => {
+const AddFolder = ({ folderId }) => {
+  console.log(folderId);
+  const dispatch = useDispatch();
   const [data, setData] = useState({ name: "" });
 
   async function createFolder(id, name) {
@@ -10,18 +14,17 @@ const AddFolder = ({ folderId, setContent }) => {
       parent_folder: id,
       name,
     });
-    console.log(newFolder);
     if (newFolder.success === true) {
-      setContent((prev) => {
-        return { ...prev, folders: [...prev.folders, newFolder.data] };
-      });
+      dispatch(addFolder(newFolder.data));
     }
   }
 
   return (
-    <div>
+    <div className=" mt-2 w-max rounded-md flex gap-2">
       <input
         type="text"
+        placeholder="folder name"
+        className="bg-[#0000003a] py-2 px-3 rounded-md"
         onChange={(e) => {
           setData((prev) => {
             return { ...prev, name: e.target.value };
@@ -29,6 +32,7 @@ const AddFolder = ({ folderId, setContent }) => {
         }}
       />
       <button
+        className="bg-[#0000002a] py-2 px-3 rounded-md hover:bg-[#0000004a]"
         onClick={() => {
           createFolder(folderId, data.name);
         }}

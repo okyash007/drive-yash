@@ -1,90 +1,83 @@
-import React, { useEffect, useState } from "react";
+import { Link, Outlet, useParams } from "react-router-dom";
 import { makeGetRequest } from "../../apis/makeGetRequest";
 import { backendUrl } from "../../utils/constants";
-import { useSelector } from "react-redux";
-import FolderCard from "../../components/FolderCard";
-import { Link } from "react-router-dom";
-import ImageCard from "../../components/ImageCard";
-import { FaFolderPlus } from "react-icons/fa";
-import { BiSolidImageAdd } from "react-icons/bi";
-import AddFolder from "./add/AddFolder";
-import AddImage from "./add/AddImage";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setPresentFolder } from "../../store/folderSlice";
 
 const Drive = () => {
+  const dispatch = useDispatch();
+  const params = useParams();
+  const [folders, setFolders] = useState(null);
   const user = useSelector((store) => store.user.data);
-  const [content, setContent] = useState(null);
-  const [add, setAdd] = useState(null);
+
+  async function getPath(id) {
+    const allFolders = await makeGetRequest(`${backendUrl}/folder/all/${id}`);
+    console.log(allFolders);
+    setFolders([{ name: "drive" }, ...allFolders.data.reverse()]);
+  }
 
   async function getFolder(id) {
     const data = await makeGetRequest(`${backendUrl}/folder/${id}`);
     if (data.success === true) {
-      setContent({ images: data.data.images, folders: data.data.sub_folder });
+      console.log(data);
+      dispatch(
+        setPresentFolder({
+          images: data.data.images,
+          folders: data.data.sub_folder,
+          _id: data.data._id,
+          parent_folder: data.data.parent_folder,
+        })
+      );
     }
   }
 
   useEffect(() => {
-    getFolder(user.root_folder._id);
-  }, []);
-
-  console.log(content);
-
-  if (content === null) {
-    return <>loading</>;
-  }
-  console.log(add);
+    if (params.id) {
+      getPath(params.id);
+      getFolder(params.id);
+    } else {
+      setFolders([{ name: "drive" }]);
+      getFolder(user.root_folder._id);
+    }
+  }, [params]);
 
   return (
     <>
-      <div className="bg-[#ffffff1a]">
-        <div className="flex gap-2">
-          <FaFolderPlus
-            onClick={() => {
-              setAdd((prev) => {
-                if (prev === "folder") {
-                  return null;
-                } else {
-                  return "folder";
-                }
-              });
-            }}
-            size={"30"}
-          />
-          <BiSolidImageAdd
-            onClick={() => {
-              setAdd((prev) => {
-                if (prev === "image") {
-                  return null;
-                } else {
-                  return "image";
-                }
-              });
-            }}
-            size={"35"}
-          />
+      {folders ? (
+        <div className="flex gap-2 items-center bg-[#ffffff1a] py-3 px-4 m-3 rounded-md">
+          <p>/</p>
+          {folders.map((m, i) => {
+            if (m.type === "root") {
+              return <></>;
+            }
+            if (folders.length - 1 == i) {
+              return (
+                <>
+                  <Link to={m._id ? `/drive/${m._id}` : "/drive"}>
+                    <p className="bg-[#ffffff2a] text-4xl  py-2 px-4 rounded-lg">
+                      {m.name}
+                    </p>
+                  </Link>
+                </>
+              );
+            }
+            return (
+              <>
+                <Link to={m._id ? `/drive/${m._id}` : "/drive"}>
+                  <p className="bg-[#ffffff2a] py-2 px-4 rounded-lg">
+                    {m.name}
+                  </p>
+                </Link>
+                <p>/</p>
+              </>
+            );
+          })}
         </div>
-        <div>
-          {add === "folder" ? (
-            <AddFolder
-              folderId={user.root_folder._id}
-              setContent={setContent}
-            />
-          ) : add === "image" ? (
-            <AddImage folderId={user.root_folder._id} setContent={setContent} />
-          ) : (
-            <></>
-          )}
-        </div>
-      </div>
-      <div className="flex flex-wrap gap-4">
-        {content.folders.map((m) => (
-          <Link key={m._id} to={`/drive/${m._id}`}>
-            <FolderCard data={m} />
-          </Link>
-        ))}
-        {content.images.map((m) => (
-          <ImageCard key={m._id} data={m} />
-        ))}
-      </div>
+      ) : (
+        <>loading</>
+      )}
+      <Outlet />
     </>
   );
 };

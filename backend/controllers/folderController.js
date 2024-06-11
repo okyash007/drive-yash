@@ -69,3 +69,40 @@ export const deleteFolder = asyncHandler(async (req, res, next) => {
 
   return res.json(new apiResponse(200));
 });
+
+export const allFolder = asyncHandler(async (req, res, next) => {
+  const folder = await Folder.findById(req.params.id)
+    .populate("parent_folder")
+    .exec();
+
+  if (!folder) {
+    throw new Error("Folder not found");
+  }
+
+  const parentFolders = [];
+
+  // Add the current folder to the list
+  parentFolders.push(folder);
+
+  // Recursive function to gather all parent folders
+  async function findParents(currentFolder) {
+    if (currentFolder.parent_folder) {
+      // Add the current parent folder to the list
+      parentFolders.push(currentFolder.parent_folder);
+
+      // Recursively call findParents with the parent folder
+      const parentFolder = await Folder.findById(currentFolder.parent_folder)
+        .populate("parent_folder")
+        .exec();
+
+      if (parentFolder) {
+        await findParents(parentFolder);
+      }
+    }
+  }
+
+  // Start the recursive search with the initial folder
+  await findParents(folder);
+
+  return res.json(new apiResponse(200, parentFolders));
+});

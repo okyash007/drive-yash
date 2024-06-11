@@ -12,32 +12,37 @@ import { useDispatch, useSelector } from "react-redux";
 import { makeGetRequest } from "./apis/makeGetRequest";
 import { backendUrl } from "./utils/constants";
 import { setUser } from "./store/userSlice";
-import Folder from "../src/pages/folder/Folder";
 import Search from "./pages/search/Search";
+import RootFolder from "./pages/drive/root-folder/RootFolder";
 
 const Body = () => {
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user.data);
   const [loading, setLoading] = useState(true);
 
-  console.log(user);
-
   const appRouter = createBrowserRouter([
     {
       path: "/",
-      element: user ? <Navigate to={"drive"} /> : <Navigate to={"/login"} />,
+      element: user ? <Navigate to={"/drive"} /> : <Navigate to={"/login"} />,
     },
-    {
-      path: "/drive",
-      element: user ? <Drive /> : <Navigate to={"/login"} />,
-    },
+
     {
       path: "/search",
       element: user ? <Search /> : <Navigate to={"/login"} />,
     },
     {
-      path: "/drive/*",
-      element: user ? <Folder /> : <Navigate to={"/login"} />,
+      path: "/drive",
+      element: user ? <Drive /> : <Navigate to={"/login"} />,
+      children: [
+        {
+          path: "/drive",
+          element: <RootFolder />,
+        },
+        {
+          path: "/drive/:id",
+          element: <RootFolder />,
+        },
+      ],
     },
     {
       path: "/login",
@@ -78,7 +83,7 @@ const Body = () => {
     }
   }, []);
 
-  if (loading) {
+  if (!user) {
     return <>loading</>;
   }
 
