@@ -11,6 +11,7 @@ const foderSchema = new mongoose.Schema(
     parent_folder: { type: mongoose.Schema.Types.ObjectId, ref: "Folder" },
     sub_folder: [{ type: mongoose.Schema.Types.ObjectId, ref: "Folder" }],
     name: { type: String, required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );

@@ -36,7 +36,11 @@ export const userSignup = asyncHandler(async (req, res, next) => {
   const hashedPassword = hashPassword(password);
   let newUser = new User({ username, password: hashedPassword });
 
-  const rootFolder = new Folder({ type: "root", name: username });
+  const rootFolder = new Folder({
+    type: "root",
+    name: username,
+    user: newUser._id,
+  });
   await rootFolder.save();
 
   newUser.root_folder = rootFolder._id;

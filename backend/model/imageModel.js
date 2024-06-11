@@ -8,6 +8,7 @@ const imageSchema = new mongoose.Schema(
       required: true,
     },
     parent_folder: { type: mongoose.Schema.Types.ObjectId, ref: "Folder" },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );

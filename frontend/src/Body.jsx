@@ -13,6 +13,7 @@ import { makeGetRequest } from "./apis/makeGetRequest";
 import { backendUrl } from "./utils/constants";
 import { setUser } from "./store/userSlice";
 import Folder from "../src/pages/folder/Folder";
+import Search from "./pages/search/Search";
 
 const Body = () => {
   const dispatch = useDispatch();
@@ -31,8 +32,12 @@ const Body = () => {
       element: user ? <Drive /> : <Navigate to={"/login"} />,
     },
     {
+      path: "/search",
+      element: user ? <Search /> : <Navigate to={"/login"} />,
+    },
+    {
       path: "/drive/*",
-      element: <Folder />,
+      element: user ? <Folder /> : <Navigate to={"/login"} />,
     },
     {
       path: "/login",
@@ -74,7 +79,7 @@ const Body = () => {
   }, []);
 
   if (loading) {
-    return <></>;
+    return <>loading</>;
   }
 
   return (
