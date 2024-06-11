@@ -14,6 +14,7 @@ import { backendUrl } from "./utils/constants";
 import { setUser } from "./store/userSlice";
 import Search from "./pages/search/Search";
 import RootFolder from "./pages/drive/root-folder/RootFolder";
+import "ldrs/ring";
 
 const Body = () => {
   const dispatch = useDispatch();
@@ -83,8 +84,18 @@ const Body = () => {
     }
   }, []);
 
-  if (!user) {
-    return <>loading</>;
+  if (loading) {
+    return (
+      <div className="w-full h-screen flex justify-center items-center">
+        <l-ring
+          size="30"
+          stroke="5"
+          bg-opacity="0"
+          speed="1.5"
+          color="white"
+        ></l-ring>
+      </div>
+    );
   }
 
   return (

@@ -4,6 +4,7 @@ import { backendUrl } from "../../../utils/constants";
 import { useDispatch } from "react-redux";
 import { addImage } from "../../../store/folderSlice";
 import "ldrs/ring";
+import toast from "react-hot-toast";
 
 const AddImage = ({ folderId }) => {
   const dispatch = useDispatch();
@@ -116,7 +117,13 @@ const AddImage = ({ folderId }) => {
           if (data.name && data.path) {
             createImage(folderId, data.name, data.path);
           } else {
-            console.log("not proper data");
+            toast.error("fill data correctly", {
+              duration: 4000,
+              position: "bottom-right",
+              // Customizing the toast with Tailwind CSS classes
+              className: "bg-[#0000002a] text-white border-0 rounded-md",
+              // Or you can use a custom icon
+            });
           }
         }}
       >

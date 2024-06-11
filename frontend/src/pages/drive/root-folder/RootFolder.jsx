@@ -19,7 +19,17 @@ const RootFolder = () => {
   const [add, setAdd] = useState(null);
 
   if (folder === null) {
-    return <>loading</>;
+    return (
+      <div className="flex justify-center mt-[20%]">
+        <l-ring
+          size="30"
+          stroke="5"
+          bg-opacity="0"
+          speed="1.5"
+          color="white"
+        ></l-ring>
+      </div>
+    );
   }
 
   console.log(folder);
@@ -73,13 +83,6 @@ const RootFolder = () => {
           <ImageCard key={m._id} data={m} />
         ))}
       </div>
-      <l-ring
-        size="10"
-        stroke="2"
-        bg-opacity="0"
-        speed="2"
-        color="white"
-      ></l-ring>
     </>
   );
 };

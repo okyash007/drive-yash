@@ -3,6 +3,7 @@ import { makePostRequest } from "../../../apis/makePostRequest";
 import { backendUrl } from "../../../utils/constants";
 import { useDispatch } from "react-redux";
 import { addFolder } from "../../../store/folderSlice";
+import toast from "react-hot-toast";
 
 const AddFolder = ({ folderId }) => {
   console.log(folderId);
@@ -34,7 +35,17 @@ const AddFolder = ({ folderId }) => {
       <button
         className="bg-[#0000002a] py-2 px-3 rounded-md hover:bg-[#0000004a]"
         onClick={() => {
-          createFolder(folderId, data.name);
+          if (data.name) {
+            createFolder(folderId, data.name);
+          } else {
+            toast.error("fill data correctly", {
+              duration: 4000,
+              position: "bottom-right",
+              // Customizing the toast with Tailwind CSS classes
+              className: "bg-[#0000002a] text-white border-0 rounded-md",
+              // Or you can use a custom icon
+            });
+          }
         }}
       >
         Add
