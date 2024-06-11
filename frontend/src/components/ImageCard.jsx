@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { makePostRequest } from "../apis/makePostRequest";
 import { backendUrl } from "../utils/constants";
@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 
 const ImageCard = ({ data }) => {
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
   async function deleteImageFn() {
     const deleteStatus = await makePostRequest(
@@ -15,6 +16,7 @@ const ImageCard = ({ data }) => {
     );
 
     console.log(deleteStatus);
+    setLoading(false);
     if (deleteStatus.success === true) {
       dispatch(deleteImage({ id: data._id }));
     }
@@ -28,15 +30,28 @@ const ImageCard = ({ data }) => {
         alt=""
       />
       <p className="text-center">{data.name}</p>
-      <div className="absolute top-0 right-0 p-1 bg-[#ffffff2a] rounded-full hover:bg-[#ffffff3a]">
-        <MdDelete
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            deleteImageFn();
-          }}
-        />
-      </div>
+      {loading ? (
+        <div className="absolute top-0 right-0 p-1">
+          <l-ring
+            size="10"
+            stroke="2"
+            bg-opacity="0"
+            speed="2"
+            color="white"
+          ></l-ring>
+        </div>
+      ) : (
+        <div className="absolute top-0 right-0 p-1 bg-[#ffffff2a] rounded-full hover:bg-[#ffffff3a]">
+          <MdDelete
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setLoading(true);
+              deleteImageFn();
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };
