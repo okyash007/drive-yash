@@ -4,7 +4,7 @@ import {
   createFoler,
   deleteFolder,
   getFolder,
-} from "../controllers/foldercontroller.js";
+} from "../controllers/folderController.js";
 import { verifyToken } from "../middlewares/verifyToken.js";
 
 export const folderRouter = Router();
