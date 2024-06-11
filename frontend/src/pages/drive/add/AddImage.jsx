@@ -121,7 +121,7 @@ const AddImage = ({ folderId }) => {
               duration: 4000,
               position: "bottom-right",
               // Customizing the toast with Tailwind CSS classes
-              className: "bg-[#0000002a] text-white border-0 rounded-md",
+              className: "toast-error",
               // Or you can use a custom icon
             });
           }

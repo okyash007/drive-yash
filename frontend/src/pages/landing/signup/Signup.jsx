@@ -3,6 +3,8 @@ import { makePostRequest } from "../../../apis/makePostRequest";
 import { backendUrl } from "../../../utils/constants";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
+import { setUser } from "../../../store/userSlice";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -19,8 +21,27 @@ const Signup = () => {
     setLoading(false);
     if (userData.success === true) {
       localStorage.setItem("access_token", userData.data.token);
+      toast.success("Login success", {
+        duration: 4000,
+        position: "bottom-right",
+        // Customizing the toast with Tailwind CSS classes
+        className: "toast-success",
+        // Or you can use a custom icon
+        icon: "✔️",
+      });
       dispatch(setUser(userData.data.user));
       navigate("/drive");
+    } else {
+      toast.error(
+        userData.message ? userData.message : "something went wrong",
+        {
+          duration: 4000,
+          position: "bottom-right",
+          // Customizing the toast with Tailwind CSS classes
+          className: "toast-error",
+          // Or you can use a custom icon
+        }
+      );
     }
   }
 

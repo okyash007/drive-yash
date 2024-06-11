@@ -13,6 +13,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   async function handleLogin() {
+    console.log(formData);
     const userData = await makePostRequest(`${backendUrl}/user/login`, {
       username: formData.username,
       password: formData.password,
@@ -24,7 +25,7 @@ const Login = () => {
         duration: 4000,
         position: "bottom-right",
         // Customizing the toast with Tailwind CSS classes
-        className: "bg-[#0000002a] text-white ring- rounded-md",
+        className: "toast-success",
         // Or you can use a custom icon
         icon: "✔️",
       });
@@ -38,8 +39,7 @@ const Login = () => {
           duration: 4000,
           position: "bottom-right",
           // Customizing the toast with Tailwind CSS classes
-          className:
-            "bg-[#0000002a] text-white border-0 rounded-md ring-red-700",
+          className: "toast-error",
           // Or you can use a custom icon
         }
       );

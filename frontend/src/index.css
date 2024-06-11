@@ -32,6 +32,40 @@ h1 {
   line-height: 1.1;
 }
 
+.toast {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-radius: 4px;
+  font-family: Arial, sans-serif;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.toast-success {
+  background-color: #28a745; /* Green background */
+  color: white;
+}
+
+.toast-error {
+  background-color: #dc3545; /* Red background */
+  color: white;
+}
+
+.toast-loading {
+  background-color: #ffc107; /* Yellow background */
+  color: black;
+}
+
+.toast-custom {
+  background-color: #17a2b8; /* Blue background */
+  color: white;
+}
+
+.toast-icon {
+  margin-right: 8px;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
