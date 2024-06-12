@@ -15,6 +15,8 @@ import { setUser } from "./store/userSlice";
 import Search from "./pages/search/Search";
 import RootFolder from "./pages/drive/root-folder/RootFolder";
 import "ldrs/ring";
+import Share from "./pages/share/Share";
+import Images from "./pages/share/Images";
 
 const Body = () => {
   const dispatch = useDispatch();
@@ -44,6 +46,14 @@ const Body = () => {
           element: <RootFolder />,
         },
       ],
+    },
+    {
+      path: "/share",
+      element: <Share />,
+    },
+    {
+      path: "/share/:id",
+      element: <Images />,
     },
     {
       path: "/login",

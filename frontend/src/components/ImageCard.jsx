@@ -5,7 +5,7 @@ import { backendUrl } from "../utils/constants";
 import { deleteImage } from "../store/folderSlice";
 import { useDispatch } from "react-redux";
 
-const ImageCard = ({ data }) => {
+const ImageCard = ({ data, isDelete }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
@@ -41,16 +41,18 @@ const ImageCard = ({ data }) => {
           ></l-ring>
         </div>
       ) : (
-        <div className="absolute top-0 right-0 p-1 bg-[#ffffff2a] rounded-full hover:bg-[#ffffff3a]">
-          <MdDelete
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setLoading(true);
-              deleteImageFn();
-            }}
-          />
-        </div>
+        isDelete && (
+          <div className="absolute top-0 right-0 p-1 bg-[#ffffff2a] rounded-full hover:bg-[#ffffff3a]">
+            <MdDelete
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setLoading(true);
+                deleteImageFn();
+              }}
+            />
+          </div>
+        )
       )}
     </div>
   );

@@ -6,10 +6,11 @@ import { FaFolderPlus } from "react-icons/fa";
 import { BiSolidImageAdd } from "react-icons/bi";
 import AddFolder from "../add/AddFolder";
 import AddImage from "../add/AddImage";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import FolderCard from "../../../components/FolderCard";
 import ImageCard from "../../../components/ImageCard";
 import "ldrs/ring";
+import ShareFolder from "./ShareFolder";
 
 // Default values shown
 
@@ -17,6 +18,7 @@ const RootFolder = () => {
   const user = useSelector((store) => store.user.data);
   const folder = useSelector((store) => store.folder.presentFolder);
   const [add, setAdd] = useState(null);
+  const params = useParams();
 
   if (folder === null) {
     return (
@@ -63,6 +65,7 @@ const RootFolder = () => {
             size={"35"}
           />
         </div>
+
         <div>
           {add === "folder" ? (
             <AddFolder folderId={folder._id} />
@@ -73,14 +76,15 @@ const RootFolder = () => {
           )}
         </div>
       </div>
+      {params.id && <ShareFolder id={params.id} />}
       <div className="flex flex-wrap gap-4">
         {folder.folders.map((m) => (
           <Link key={m._id} to={`/drive/${m._id}`}>
-            <FolderCard data={m} />
+            <FolderCard isDelete={true} data={m} />
           </Link>
         ))}
         {folder.images.map((m) => (
-          <ImageCard key={m._id} data={m} />
+          <ImageCard isDelete={true} key={m._id} data={m} />
         ))}
       </div>
     </>

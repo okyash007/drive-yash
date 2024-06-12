@@ -1,5 +1,7 @@
+import mongoose from "mongoose";
 import Folder from "../model/folderModel.js";
 import Image from "../model/imageModel.js";
+import User from "../model/userModel.js";
 import { apiError } from "../utils/apiError.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -30,10 +32,26 @@ export const getFolder = asyncHandler(async (req, res, next) => {
   }
 
   if (folder.user.toString() !== req.user.id) {
+    if (folder.shared_with.includes(req.user.id)) {
+      return res.json(new apiResponse(200, folder));
+    }
     return next(new apiError(400, "you can only access your folder"));
   }
 
   return res.json(new apiResponse(200, folder));
+});
+
+export const getTest = asyncHandler(async (req, res, next) => {
+  // Find folders where the user is in the shared_with array
+
+  if (!mongoose.Types.ObjectId.isValid(req.user.id)) {
+    return next(new apiError(400, "userId not valid"));
+  }
+
+  const sharedFolders = await Folder.find({
+    shared_with: req.user.id,
+  });
+  res.json(new apiResponse(200, sharedFolders));
 });
 
 export const deleteFolder = asyncHandler(async (req, res, next) => {
@@ -105,4 +123,33 @@ export const allFolder = asyncHandler(async (req, res, next) => {
   await findParents(folder);
 
   return res.json(new apiResponse(200, parentFolders));
+});
+
+export const shareFolder = asyncHandler(async (req, res, next) => {
+  const user = await User.findOne({ username: req.body.username });
+
+  if (!user) {
+    return next(new apiError(400, "user not found"));
+  }
+
+  const folder = await Folder.findById(req.body.folder);
+
+  if (!folder) {
+    return next(new apiError(400, "folder not found"));
+  }
+
+  if (folder.user.toString() !== req.user.id) {
+    return next(new apiError(400, "you can only share you folder"));
+  }
+
+  if (folder.sub_folder.length !== 0) {
+    return next(
+      new apiError(400, "you cannot share a folder with sub folders")
+    );
+  }
+
+  folder.shared_with.push(user._id);
+  await folder.save();
+
+  return res.json(new apiResponse(200, "folder shared succesfully"));
 });
