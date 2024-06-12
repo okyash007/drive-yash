@@ -15,6 +15,10 @@ export const createFoler = asyncHandler(async (req, res, next) => {
     return next(new apiError(400, "you can only access your parent folders"));
   }
 
+  if(parentFolder.shared_with.length !== 0){
+    return next(new apiError(400, "this folder is shared"));
+  }
+
   parentFolder.sub_folder.push(newFolder._id);
 
   await newFolder.save();
