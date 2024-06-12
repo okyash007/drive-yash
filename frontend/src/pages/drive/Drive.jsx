@@ -84,6 +84,12 @@ const Drive = () => {
             >
               search
             </Link>
+            <Link
+              to={"/share"}
+              className="bg-[#ffffff1a] px-4 py-4 rounded-md hover:bg-[#ffffff2a]"
+            >
+              Shared Folders
+            </Link>
             <button
               className="bg-[#ffffff1a] px-4 py-4 rounded-md hover:bg-[#ffffff2a]"
               onClick={() => {

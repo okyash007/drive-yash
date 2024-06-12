@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { deleteFolder } from "../store/folderSlice";
 import "ldrs/ring";
 
-const FolderCard = ({ data }) => {
+const FolderCard = ({ data, isDelete }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
@@ -41,16 +41,18 @@ const FolderCard = ({ data }) => {
           ></l-ring>
         </div>
       ) : (
-        <div className="absolute top-0 right-0 p-1 bg-[#ffffff2a] rounded-full hover:bg-[#ffffff3a]">
-          <MdDelete
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setLoading(true);
-              deleteFolderFn();
-            }}
-          />
-        </div>
+        isDelete && (
+          <div className="absolute top-0 right-0 p-1 bg-[#ffffff2a] rounded-full hover:bg-[#ffffff3a]">
+            <MdDelete
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setLoading(true);
+                deleteFolderFn();
+              }}
+            />
+          </div>
+        )
       )}
     </div>
   );
