@@ -19,6 +19,11 @@ const AddFolder = ({ folderId }) => {
     setLoading(false);
     if (newFolder.success === true) {
       dispatch(addFolder(newFolder.data));
+    } else {
+      toast.error(newFolder.message, {
+        duration: 4000,
+        position: "bottom-right",
+      });
     }
   }
 
