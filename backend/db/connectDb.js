@@ -6,7 +6,7 @@ const connectDb = async () => {
       `${process.env.MONGODB_URI}/drive`
     );
     console.log(
-      `MongoDB connected !! DB HOST: ${connectionInstance.connection.host}`
+      `MongoDB connected !!! DB HOST: ${connectionInstance.connection.host}`
     );
   } catch (error) {
     console.log("MONGODB connection FAILED ", error);
